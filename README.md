@@ -1,2 +1,1 @@
-haplotype_freq_filter
-=====================
+# haplotype_freq_filter

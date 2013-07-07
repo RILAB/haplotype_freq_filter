@@ -1,0 +1,34 @@
+2003-05-09  Kevin Thornton  <kevin@krthornt.uchicago.edu>
+
+	* configure.in: package version 0.1.3
+
+2003-04-01  Kevin Thornton  <kevin@krthornt.uchicago.edu>
+
+	* config.h: *** empty log message ***
+
+2003-03-24  Kevin Thornton  <kevin@krthornt.uchicago.edu>
+
+	* src/msff.cc: added "using namespace Sequence"
+
+2003-03-21  Kevin Thornton  <kevin@krthornt.uchicago.edu>
+
+	* src/Makefile, Makefile, config.status, configure, configure.in:
+	package 0.1.2
+
+	* INSTALL: added INSTALL
+
+	* src/msff.cc: fixed case with 0 seg sites.
+
+	* src/Makefile, Makefile, config.guess, config.status, config.sub, install-sh, missing, mkinstalldirs, msff.lsm, texinfo.tex:
+	added necessary build files
+
+	* AUTHORS, COPYING, ChangeLog, Makefile, Makefile.am, Makefile.in, NEWS, README, acinclude.m4, aclocal.m4, config.cache, config.h, config.h.in, config.log, config.status, configure, configure.in, gpl.texinfo, msff.1, msff.lsm, msff.lsm.in, msff.spec, msff.spec.in, msff.texinfo, src/.deps/getopt.P, src/.deps/getopt1.P, src/.deps/msff.P, src/Makefile, src/Makefile.am, src/Makefile.in, src/getopt.c, src/getopt.h, src/getopt1.c, src/msff.cc, stamp-h, stamp-h.in, xmalloc.c:
+	New file.
+
+	* AUTHORS, COPYING, ChangeLog, Makefile, Makefile.am, Makefile.in, NEWS, README, acinclude.m4, aclocal.m4, config.cache, config.h, config.h.in, config.log, config.status, configure, configure.in, gpl.texinfo, msff.1, msff.lsm, msff.lsm.in, msff.spec, msff.spec.in, msff.texinfo, src/.deps/getopt.P, src/.deps/getopt1.P, src/.deps/msff.P, src/Makefile, src/Makefile.am, src/Makefile.in, src/getopt.c, src/getopt.h, src/getopt1.c, src/msff.cc, stamp-h, stamp-h.in, xmalloc.c:
+	initial commit to cvs
+
+2002-11-07  Kevin Thornton  <k-thornton@uchicago.edu>
+
+	* msff: initial version.
+

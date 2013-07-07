@@ -1,3 +1,9 @@
+# ms seed file
+seedms
+
+#any output labelled "crap"
+*crap*
+
 # Compiled Object files
 *.slo
 *.lo

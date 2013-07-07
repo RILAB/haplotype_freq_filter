@@ -1,3 +1,15 @@
+# config output files
+Makefile
+config.h
+config.log
+config.status
+msff.lsm
+msff.spec
+src/Makefile
+src/msff
+stamp-h
+
+
 # ms seed file
 seedms
 

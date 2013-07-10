@@ -71,7 +71,9 @@ int main(int argc, char *argv[]) {
 	indexes = static_cast<unsigned *>(realloc(indexes,MAXSITES*sizeof(unsigned)));
       }
     nindexes=0;
+	
     for (unsigned i = 0 ; i < d.numsites() ; ++i)
+//      for (unsigned i = 0; i < 1; ++i)
       {
 	dercounts = 0;
 	for (unsigned j = 0 ; j < d.size() ; ++j)
@@ -82,15 +84,17 @@ int main(int argc, char *argv[]) {
 	  {
 	  case MINOR:
 	    if (1.0-double(dercounts)/double(totsam)>args.freq&&
-		double(dercounts)/double(totsam)>args.freq)
+		double(dercounts)/double(totsam)>args.freq || i>0 )
 	      {
-		indexes[nindexes++]=i;
+		indexes[nindexes]=i;
+		if( nindexes == 0 ){ nindexes++; } 
 	      }
 	    break;
 	  case DERIVED:
-	    if(double(dercounts)/double(totsam)>args.freq)
+	    if(double(dercounts)/double(totsam)>args.freq || i>0 )
 	      {
-		indexes[nindexes++]=i;
+		indexes[nindexes]=i;
+		if( nindexes == 0 ){ nindexes++; } 
 	      }
 	    break;
 	  }
@@ -102,14 +106,17 @@ int main(int argc, char *argv[]) {
     if (nindexes > 0)
       {
 	fprintf(stdout,"//\nsegsites: %d\npositions: ",nindexes);
-	for(unsigned j = 0 ; j < nindexes ; ++j)
+//	for(unsigned j = 0 ; j < nindexes ; ++j)
+	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
+	
 	  {
 	    fprintf(stdout,"%lf ",d.position(indexes[j]));
 	  }
 	fprintf(stdout,"\n");
 	for(unsigned i = 0 ; i < totsam ; ++i)
 	  {
-	    for(unsigned j = 0 ; j < nindexes ; ++j)
+//	    for(unsigned j = 0 ; j < nindexes ; ++j)
+	    for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
 	      {
 		fprintf(stdout,"%c",d[i][indexes[j]]);
 	      }

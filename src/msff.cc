@@ -86,15 +86,16 @@ int main(int argc, char *argv[]) {
 	    if (1.0-double(dercounts)/double(totsam)>args.freq&&
 		double(dercounts)/double(totsam)>args.freq || i>0 )
 	      {
-		indexes[nindexes]=i;
-		if( nindexes == 0 ){ nindexes++; } 
+		indexes[nindexes]=i; //JRI
+//		cerr << "WTF " << i << " " << nindexes << endl; 
+		if( i == 0 ){ nindexes++; } //JRI
 	      }
 	    break;
 	  case DERIVED:
 	    if(double(dercounts)/double(totsam)>args.freq || i>0 )
 	      {
-		indexes[nindexes]=i;
-		if( nindexes == 0 ){ nindexes++; } 
+		indexes[nindexes]=i; //JRI
+		if( i == 0 ){ nindexes++; } //JRI
 	      }
 	    break;
 	  }
@@ -110,7 +111,8 @@ int main(int argc, char *argv[]) {
 	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
 	
 	  {
-	    fprintf(stdout,"%lf ",d.position(indexes[j]));
+	 //   fprintf(stdout,"%lf ",d.position(indexes[j]));
+	    fprintf(stdout,"%lf ",d.position(j)); //JRI
 	  }
 	fprintf(stdout,"\n");
 	for(unsigned i = 0 ; i < totsam ; ++i)
@@ -118,7 +120,8 @@ int main(int argc, char *argv[]) {
 //	    for(unsigned j = 0 ; j < nindexes ; ++j)
 	    for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
 	      {
-		fprintf(stdout,"%c",d[i][indexes[j]]);
+//		fprintf(stdout,"%c",d[i][indexes[j]]);
+		fprintf(stdout,"%c",d[i][j]); //JRI
 	      }
 	    fprintf(stdout,"\n");
 	  }

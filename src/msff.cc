@@ -56,57 +56,24 @@ int main(int argc, char *argv[]) {
 
   unsigned totsam = p.totsam();
 
-  unsigned MAXSITES = 100;
-  unsigned *indexes = static_cast<unsigned *>(malloc(MAXSITES*sizeof(unsigned)));
+//  unsigned MAXSITES = 100;
+  unsigned *indexes = static_cast<unsigned *>(malloc(p.totsam()*sizeof(unsigned)));
   unsigned nindexes,dercounts;
 
   std::ios_base::sync_with_stdio(true);
 
   int rv;
   while( (rv=d.fromfile(stdin)) != EOF)
-    {
-    if (d.numsites() > MAXSITES)
-      {
-	MAXSITES = d.numsites()+1;
-	indexes = static_cast<unsigned *>(realloc(indexes,MAXSITES*sizeof(unsigned)));
-      }
+   {
     nindexes=0;
 	
-    for (unsigned i = 0 ; i < d.numsites() ; ++i)
+//    for (unsigned i = 0 ; i < d.numsites() ; ++i)
 //      for (unsigned i = 0; i < 1; ++i)
-      {
-	dercounts = 0;
-	for (unsigned j = 0 ; j < d.size() ; ++j)
-	  {
-	    dercounts += d[j][i] == '1' ? 1 : 0;
-	  }
-	switch (args.filter)
-	  {
-	  case MINOR:
-	    if (1.0-double(dercounts)/double(totsam)>args.freq&&
-		double(dercounts)/double(totsam)>args.freq || i>0 )
-	      {
-		indexes[nindexes]=i; //JRI
-//		cerr << "WTF " << i << " " << nindexes << endl; 
-		if( i == 0 ){ nindexes++; } //JRI
-	      }
-	    break;
-	  case DERIVED:
-	    if(double(dercounts)/double(totsam)>args.freq || i>0 )
-	      {
-		indexes[nindexes]=i; //JRI
-		if( i == 0 ){ nindexes++; } //JRI
-	      }
-	    break;
-	  }
-      }
+//      {
 
-    //print out the new, filtered, gametes
-    //used C-style I/O b/c it can be much faster,
-    //and speed is important here
-    if (nindexes > 0)
-      {
-	fprintf(stdout,"//\nsegsites: %d\npositions: ",nindexes);
+   //if (nindexes > 0)
+    //  {
+	fprintf(stdout,"//\nsegsites: %d\npositions: ",d.numsites());
 //	for(unsigned j = 0 ; j < nindexes ; ++j)
 	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
 	
@@ -125,11 +92,46 @@ int main(int argc, char *argv[]) {
 	      }
 	    fprintf(stdout,"\n");
 	  }
-      }
-    else
-      {
-	fprintf(stdout,"//\nsegsites: 0\n\n");
-      }
+   //   }
+   // else
+   //   {
+	//fprintf(stdout,"//\nsegsites: 0\n\n");
+//      }
+
+
+	dercounts = 0;
+	for (unsigned j = 0 ; j < d.size() ; ++j)
+	  {
+	    dercounts += d[j][0] == '1' ? 1 : 0;
+	  }
+	switch (args.filter)
+	  {
+	  case MINOR:
+	    if (1.0-double(dercounts)/double(totsam)>args.freq&&
+		double(dercounts)/double(totsam)>args.freq  )
+	      {
+		indexes[nindexes]=i; //JRI
+//		cerr << "WTF " << i << " " << nindexes << endl; 
+		if( i == 0 ){ nindexes++; } //JRI
+	      }
+	    break;
+	  case DERIVED:
+	    if(double(dercounts)/double(totsam)>args.freq  )
+	      {
+		indexes[nindexes]=i; //JRI
+		if( i == 0 ){ nindexes++; } //JRI
+	      }
+	    break;
+	  }
+  //    }
+
+    //print out the new, filtered, gametes
+    //used C-style I/O b/c it can be much faster,
+    //and speed is important here
+    
+
+
+
   }
   free(indexes);
 }

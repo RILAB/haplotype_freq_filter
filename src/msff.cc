@@ -72,40 +72,36 @@ int main(int argc, char *argv[]) {
       }
     nindexes=0;
 	
-    for (unsigned i = 0 ; i < d.numsites() ; ++i)
-//      for (unsigned i = 0; i < 1; ++i)
-      {
+	// counts derived alleles at first site ONLY
 	dercounts = 0;
 	for (unsigned j = 0 ; j < d.size() ; ++j)
 	  {
-	    dercounts += d[j][i] == '1' ? 1 : 0;
+	    dercounts += d[j][0] == '1' ? 1 : 0;
 	  }
+
 	switch (args.filter)
 	  {
+	  //if we are interested in minor allele, do:
 	  case MINOR:
 	    if (1.0-double(dercounts)/double(totsam)>args.freq&&
-		double(dercounts)/double(totsam)>args.freq || i>0 )
+		double(dercounts)/double(totsam)>args.freq  )
 	      {
-		indexes[nindexes]=i; //JRI
-		if( i == 0 ){ nindexes++; } //JRI
+		//indexes[nindexes]=i; //JRI
 	      }
 	    break;
+	  
+	  //if we are interested in derived allele, do:
 	  case DERIVED:
-	    if(double(dercounts)/double(totsam)>args.freq || i>0 )
+	    if(double(dercounts)/double(totsam)>args.freq )
 	      {
-		indexes[nindexes]=i; //JRI
-		if( i == 0 ){ nindexes++; } //JRI
+		//indexes[nindexes]=i; //JRI
 	      }
 	    break;
 	  }
-      }
 
     //print out the new, filtered, gametes
     //used C-style I/O b/c it can be much faster,
     //and speed is important here
-    if (nindexes > 0)
-      {
-	fprintf(stdout,"//\nsegsites: %d\npositions: ",nindexes);
 	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
 	
 	  {
@@ -120,11 +116,6 @@ int main(int argc, char *argv[]) {
 	      }
 	    fprintf(stdout,"\n");
 	  }
-      }
-    else
-      {
-	fprintf(stdout,"//\nsegsites: 0\n\n");
-      }
   }
   free(indexes);
 }

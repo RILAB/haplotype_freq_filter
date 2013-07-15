@@ -87,7 +87,6 @@ int main(int argc, char *argv[]) {
 		double(dercounts)/double(totsam)>args.freq || i>0 )
 	      {
 		indexes[nindexes]=i; //JRI
-//		cerr << "WTF " << i << " " << nindexes << endl; 
 		if( i == 0 ){ nindexes++; } //JRI
 	      }
 	    break;
@@ -107,20 +106,16 @@ int main(int argc, char *argv[]) {
     if (nindexes > 0)
       {
 	fprintf(stdout,"//\nsegsites: %d\npositions: ",nindexes);
-//	for(unsigned j = 0 ; j < nindexes ; ++j)
 	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
 	
 	  {
-	 //   fprintf(stdout,"%lf ",d.position(indexes[j]));
 	    fprintf(stdout,"%lf ",d.position(j)); //JRI
 	  }
 	fprintf(stdout,"\n");
 	for(unsigned i = 0 ; i < totsam ; ++i)
 	  {
-//	    for(unsigned j = 0 ; j < nindexes ; ++j)
 	    for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
 	      {
-//		fprintf(stdout,"%c",d[i][indexes[j]]);
 		fprintf(stdout,"%c",d[i][j]); //JRI
 	      }
 	    fprintf(stdout,"\n");

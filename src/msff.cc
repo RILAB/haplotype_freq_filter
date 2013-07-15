@@ -30,6 +30,8 @@
 #include <getopt.h>
 #include <Sequence/SimParams.hpp>
 #include <Sequence/SimData.hpp>
+#include <Sequence/PolySIM.hpp>
+#include <Sequence/PolyTableFunctions.hpp>
 
 using namespace std;
 using namespace Sequence;
@@ -50,34 +52,39 @@ int main(int argc, char *argv[]) {
   SimParams p;
   cin >> p;
   SimData d(p.totsam());
+  SimData d2;	
   unsigned nruns = p.runs();
 
   cout << p << '\n';
 
   unsigned totsam = p.totsam();
 
-  unsigned MAXSITES = 100;
-  unsigned *indexes = static_cast<unsigned *>(malloc(MAXSITES*sizeof(unsigned)));
-  unsigned nindexes,dercounts;
-
+//  unsigned *indexes = static_cast<unsigned *>(malloc(MAXSITES*sizeof(unsigned)));
+//  unsigned nindexes,dercounts;
+  unsigned dercounts;
+	
   std::ios_base::sync_with_stdio(true);
 
   int rv;
   while( (rv=d.fromfile(stdin)) != EOF)
     {
-    if (d.numsites() > MAXSITES)
-      {
-	MAXSITES = d.numsites()+1;
-	indexes = static_cast<unsigned *>(realloc(indexes,MAXSITES*sizeof(unsigned)));
-      }
-    nindexes=0;
 	
+	// print header of ms sim, with positions etc.
+	fprintf(stdout,"//\nsegsites: %d\npositions: ",d.numsites());
+	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
+	  {
+	    fprintf(stdout,"%lf ",d.position(j)); //JRI
+	  }
+	fprintf(stdout,"\n");
+
 	// counts derived alleles at first site ONLY
 	dercounts = 0;
 	for (unsigned j = 0 ; j < d.size() ; ++j)
 	  {
 	    dercounts += d[j][0] == '1' ? 1 : 0;
 	  }
+
+	//depending on what we filter, print out individuals that have major allele
 
 	switch (args.filter)
 	  {
@@ -87,6 +94,14 @@ int main(int argc, char *argv[]) {
 		double(dercounts)/double(totsam)>args.freq  )
 	      {
 		//indexes[nindexes]=i; //JRI
+		for(unsigned i = 0 ; i < totsam ; ++i) 
+	  	{
+	    		for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
+	      		{
+				fprintf(stdout,"%c",d[i][j]); //JRI
+	      		}
+	    		fprintf(stdout,"\n");
+	  	}	
 	      }
 	    break;
 	  
@@ -94,30 +109,36 @@ int main(int argc, char *argv[]) {
 	  case DERIVED:
 	    if(double(dercounts)/double(totsam)>args.freq )
 	      {
-		//indexes[nindexes]=i; //JRI
+		//indexes[pnindexes]=i; //JRI
+		unsigned newdudes=0;
+		for(unsigned i = 0 ; i < totsam ; ++i)
+		  {
+		 	if( d[i][0] == '1' ){	
+			    //iterate over individuals
+			    for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
+			      {
+				//print each SNP j for individual i	
+				d2[newdudes][j]=d[i][j];
+				newdudes++;
+				// fprintf(stdout,"%c",d[i][j]); //JRI
+			      }
+			    fprintf(stdout,"\n");
+			}
+		  }
 	      }
 	    break;
 	  }
-
-    //print out the new, filtered, gametes
-    //used C-style I/O b/c it can be much faster,
-    //and speed is important here
-	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
-	
-	  {
-	    fprintf(stdout,"%lf ",d.position(j)); //JRI
-	  }
-	fprintf(stdout,"\n");
-	for(unsigned i = 0 ; i < totsam ; ++i)
-	  {
-	    for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
-	      {
-		fprintf(stdout,"%c",d[i][j]); //JRI
-	      }
-	    fprintf(stdout,"\n");
-	  }
   }
-  free(indexes);
+  //free(indexes);
+
+  RemoveInvariantColumns(&d2);
+  for(unsigned i = 0 ; i < totsam ; ++i)
+  {
+	for(unsigned j = 0 ; j < d2.numsites() ; ++j) //
+	{
+		fprintf(stdout,"%c",d2[i][j]); //JRI
+	}
+  }
 }
 
 void parseargs(int argc, char *argv[],msffargs *args)

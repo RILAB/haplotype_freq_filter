@@ -9,6 +9,8 @@ src/Makefile
 src/msff
 stamp-h
 
+#ideal result file for testing only
+ideal_result
 
 # ms seed file
 seedms

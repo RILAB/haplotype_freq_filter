@@ -16,7 +16,6 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
-
 */
 
 #include <iostream>
@@ -52,7 +51,7 @@ int main(int argc, char *argv[]) {
   SimParams p;
   cin >> p;
   SimData d(p.totsam());
-  SimData d2;	
+  SimData d2(p.totsam());	
   unsigned nruns = p.runs();
 
   cout << p << '\n';
@@ -119,26 +118,34 @@ int main(int argc, char *argv[]) {
 			      {
 				//print each SNP j for individual i	
 				d2[newdudes][j]=d[i][j];
-				newdudes++;
-				// fprintf(stdout,"%c",d[i][j]); //JRI
 			      }
-			    fprintf(stdout,"\n");
+				//cout << endl;
+			    newdudes++;
 			}
 		  }
 	      }
 	    break;
 	  }
+
+cout << d2[0][13] << endl << d2[1][13];
+
+//  RemoveInvariantColumns(&d2);
+  for(unsigned i = 0 ; i < totsam ; ++i)
+  {
+	for(unsigned j = 0 ; j < d.numsites() ; ++j) //
+	{
+		//cout << i << " " << j << endl;	
+//		cout << i << " " << j << " " << d2[i][j] << endl;
+		//fprintf(stdout,"%c",d2[i][j]); //JRI
+	}
+	fprintf(stdout,"\n");
+
+  }
+
+
   }
   //free(indexes);
 
-  RemoveInvariantColumns(&d2);
-  for(unsigned i = 0 ; i < totsam ; ++i)
-  {
-	for(unsigned j = 0 ; j < d2.numsites() ; ++j) //
-	{
-		fprintf(stdout,"%c",d2[i][j]); //JRI
-	}
-  }
 }
 
 void parseargs(int argc, char *argv[],msffargs *args)

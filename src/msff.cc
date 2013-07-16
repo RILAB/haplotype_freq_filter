@@ -51,6 +51,7 @@ int main(int argc, char *argv[]) {
   SimParams p;
   cin >> p;
   SimData d(p.totsam());
+<<<<<<< HEAD
   SimData d2(p.totsam());	
   unsigned nruns = p.runs();
 
@@ -118,6 +119,7 @@ int main(int argc, char *argv[]) {
 			      {
 				//print each SNP j for individual i	
 				d2[newdudes][j]=d[i][j];
+<<<<<<< HEAD
 			      }
 				//cout << endl;
 			    newdudes++;
@@ -126,7 +128,10 @@ int main(int argc, char *argv[]) {
 	      }
 	    break;
 	  }
+  }
+  //free(indexes);
 
+<<<<<<< HEAD
 cout << d2[0][13] << endl << d2[1][13];
 
 //  RemoveInvariantColumns(&d2);

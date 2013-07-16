@@ -117,11 +117,12 @@ int main(int argc, char *argv[]) {
 
 //	cout << d2[0][13] << endl << d2[1][13];
 
-//      cout << "Original data:\n";
-//      copy(d.begin(),d.end(),ostream_iterator<string>(cout,"\n"));
-//      cout <<"booyah\n"<< endl;
 
-
+//	Sequence::SimData::const_site_iterator itr = d.begin();
+	Sequence::PolyTable::data_iterator itr = d.begin(); itr+=3;
+//      	copy(d.begin(),itr,ostream_iterator<string>(cout,"\n"));
+	SimData d2;
+      	copy(d.begin(),itr,d2);
 
 
 	// print header of ms sim, with positions etc.
@@ -139,7 +140,7 @@ int main(int argc, char *argv[]) {
 		for(unsigned j = 0 ; j < d.numsites() ; ++j) //
 		{
 			//cout << i << " " << j << endl;	
-		//	cout << "here: " << i << " " << j << " " << d[indexes[i]][j] << endl;
+//			cout << "here: " << i << " " << j << " " << d[indexes[i]][j] << endl;
 			fprintf(stdout,"%c",d[indexes[i]][j]); 
 		}
 	fprintf(stdout,"\n");

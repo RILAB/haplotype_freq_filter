@@ -45,112 +45,106 @@ void parseargs(int argc, char *argv[],msffargs *args);
 void usage(void);
 
 int main(int argc, char *argv[]) {
-  msffargs args;
-  parseargs(argc,argv,&args);
+	msffargs args;
+  	parseargs(argc,argv,&args);
 
-  SimParams p;
-  cin >> p;
-  SimData d(p.totsam());
-<<<<<<< HEAD
-  SimData d2(p.totsam());	
-  unsigned nruns = p.runs();
-
-  cout << p << '\n';
-
-  unsigned totsam = p.totsam();
-
-//  unsigned *indexes = static_cast<unsigned *>(malloc(MAXSITES*sizeof(unsigned)));
-//  unsigned nindexes,dercounts;
-  unsigned dercounts;
+  	SimParams p;
+  	cin >> p;
+  	SimData d(p.totsam());
+  	unsigned nruns = p.runs();
+ 	unsigned totsam = p.totsam();
+	unsigned *indexes = static_cast<unsigned *>(malloc(totsam*sizeof(unsigned)));
+	unsigned nindexes,dercounts;
 	
-  std::ios_base::sync_with_stdio(true);
+  	std::ios_base::sync_with_stdio(true);
 
-  int rv;
-  while( (rv=d.fromfile(stdin)) != EOF)
-    {
-	
-	// print header of ms sim, with positions etc.
-	fprintf(stdout,"//\nsegsites: %d\npositions: ",d.numsites());
-	for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
-	  {
-	    fprintf(stdout,"%lf ",d.position(j)); //JRI
-	  }
-	fprintf(stdout,"\n");
-
-	// counts derived alleles at first site ONLY
-	dercounts = 0;
-	for (unsigned j = 0 ; j < d.size() ; ++j)
-	  {
-	    dercounts += d[j][0] == '1' ? 1 : 0;
-	  }
-
-	//depending on what we filter, print out individuals that have major allele
-
-	switch (args.filter)
-	  {
-	  //if we are interested in minor allele, do:
-	  case MINOR:
-	    if (1.0-double(dercounts)/double(totsam)>args.freq&&
-		double(dercounts)/double(totsam)>args.freq  )
-	      {
-		//indexes[nindexes]=i; //JRI
-		for(unsigned i = 0 ; i < totsam ; ++i) 
-	  	{
-	    		for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
-	      		{
-				fprintf(stdout,"%c",d[i][j]); //JRI
-	      		}
-	    		fprintf(stdout,"\n");
-	  	}	
-	      }
-	    break;
-	  
-	  //if we are interested in derived allele, do:
-	  case DERIVED:
-	    if(double(dercounts)/double(totsam)>args.freq )
-	      {
-		//indexes[pnindexes]=i; //JRI
-		unsigned newdudes=0;
-		for(unsigned i = 0 ; i < totsam ; ++i)
-		  {
-		 	if( d[i][0] == '1' ){	
-			    //iterate over individuals
-			    for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
-			      {
-				//print each SNP j for individual i	
-				d2[newdudes][j]=d[i][j];
-<<<<<<< HEAD
-			      }
-				//cout << endl;
-			    newdudes++;
-			}
-		  }
-	      }
-	    break;
-	  }
-  }
-  //free(indexes);
-
-<<<<<<< HEAD
-cout << d2[0][13] << endl << d2[1][13];
-
-//  RemoveInvariantColumns(&d2);
-  for(unsigned i = 0 ; i < totsam ; ++i)
-  {
-	for(unsigned j = 0 ; j < d.numsites() ; ++j) //
+  	int rv;
+  	while( (rv=d.fromfile(stdin)) != EOF)
 	{
-		//cout << i << " " << j << endl;	
-//		cout << i << " " << j << " " << d2[i][j] << endl;
-		//fprintf(stdout,"%c",d2[i][j]); //JRI
+		// counts derived alleles at first site ONLY
+		dercounts = 0;
+		for (unsigned j = 0 ; j < d.size() ; ++j)
+	  	{
+	    		dercounts += d[j][0] == '1' ? 1 : 0;
+	  	}
+
+		//depending on what we filter, print out individuals that have major allele
+		nindexes=0;
+		switch (args.filter)
+	  	{
+	  		//if we are interested in minor allele, do:
+	  		case MINOR:
+	    			if (1.0-double(dercounts)/double(totsam)>args.freq&&
+				double(dercounts)/double(totsam)>args.freq  )
+	      			{
+					for(unsigned i = 0 ; i < totsam ; ++i) 
+	  				{
+	    					for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
+	      					{
+							fprintf(stdout,"%c",d[i][j]); //JRI
+	      					}
+	  				}	
+	      			}
+	    		break;
+	  
+	  		//if we are interested in derived allele, do:
+	  		case DERIVED:
+	    			if(double(dercounts)/double(totsam)>args.freq )
+	      			{
+					unsigned newdudes=0;
+					for(unsigned i = 0 ; i < totsam ; ++i)
+		  			{
+						//iterate over individuals
+		 				if( d[i][0] == '1' )
+						{	
+			    				/*for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
+			      				{
+								//assign  each SNP j for individual i	
+//								d2[newdudes][j] = d[i][j];
+
+			      				}
+			    				newdudes++; */
+							indexes[nindexes++]=i;	
+//							cout << "now genos: " << d2[0][13] << " " << d2[1][13] << endl;
+						}
+		  			}
+	      			}
+	    		break;	
+	  	}
+//		cout << "2now genos: " << d2[0][13] << " " << d2[1][13] << endl;
+  	}
+  	//free(indexes);
+
+//	cout << d2[0][13] << endl << d2[1][13];
+
+//      cout << "Original data:\n";
+//      copy(d.begin(),d.end(),ostream_iterator<string>(cout,"\n"));
+//      cout <<"booyah\n"<< endl;
+
+
+
+
+	// print header of ms sim, with positions etc.
+	fprintf(stdout,"//\nsegsites: %d\npositions: ",nindexes+1);
+	for(unsigned j = 0 ; j < nindexes ; ++j) //JRI
+	{
+		fprintf(stdout,"%lf ",d.position(indexes[j])); //JRI
 	}
 	fprintf(stdout,"\n");
+	
+	//  RemoveInvariantColumns(&d2);
+  	for(unsigned i = 0 ; i < nindexes ; ++i)
+  	{		
 
-  }
+		for(unsigned j = 0 ; j < d.numsites() ; ++j) //
+		{
+			//cout << i << " " << j << endl;	
+		//	cout << "here: " << i << " " << j << " " << d[indexes[i]][j] << endl;
+			fprintf(stdout,"%c",d[indexes[i]][j]); 
+		}
+	fprintf(stdout,"\n");
 
-
-  }
-  //free(indexes);
-
+  	}
 }
 
 void parseargs(int argc, char *argv[],msffargs *args)

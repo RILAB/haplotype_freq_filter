@@ -1,3 +1,6 @@
+#test directory of original code
+testing/*
+
 # config output files
 Makefile
 config.h

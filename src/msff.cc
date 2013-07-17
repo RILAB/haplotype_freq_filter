@@ -53,8 +53,8 @@ int main(int argc, char *argv[]) {
   	SimData d(p.totsam());
   	unsigned nruns = p.runs();
  	unsigned totsam = p.totsam();
-	unsigned *indexes = static_cast<unsigned *>(malloc(totsam*sizeof(unsigned)));
-	unsigned nindexes,dercounts;
+	vector<string> filtered_haps; // we will use this vector to store new haplotypes
+	unsigned dercounts;
 	
   	std::ios_base::sync_with_stdio(true);
 
@@ -69,83 +69,70 @@ int main(int argc, char *argv[]) {
 	  	}
 
 		//depending on what we filter, print out individuals that have major allele
-		nindexes=0;
 		switch (args.filter)
 	  	{
 	  		//if we are interested in minor allele, do:
 	  		case MINOR:
-	    			if (1.0-double(dercounts)/double(totsam)>args.freq&&
-				double(dercounts)/double(totsam)>args.freq  )
+				double minor_freq;
+				minor_freq = 1.0-double(dercounts)/double(totsam) < double(dercounts)/double(totsam) ? 1.0-double(dercounts)/double(totsam) : double(dercounts)/double(totsam);
+				//if minor allele at site 0 is > specified frequency
+	    			if( 1.0-minor_freq > args.freq ) 
 	      			{
-					for(unsigned i = 0 ; i < totsam ; ++i) 
-	  				{
-	    					for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
-	      					{
-							fprintf(stdout,"%c",d[i][j]); //JRI
-	      					}
-	  				}	
+					//identify which allele is minor 0 or 1; if tie assign 0 as major and 1 as minor
+					char major_allele = dercounts > totsam-dercounts ? '1' : '0';
+
+					//iterate over individuals (rows)	
+					for(unsigned i = 0 ; i < totsam ; ++i)
+		  			{
+						//assign haplotype to vector of keepers if starts with major_allele
+		 				if( d[i][0] == major_allele )
+						{	
+							filtered_haps.push_back(d[i]);	
+						}
+		  			}
 	      			}
 	    		break;
 	  
 	  		//if we are interested in derived allele, do:
 	  		case DERIVED:
+				//if derived allele at site 0 is > specified frequency
 	    			if(double(dercounts)/double(totsam)>args.freq )
 	      			{
-					unsigned newdudes=0;
+					//iterate over individuals (rows)	
 					for(unsigned i = 0 ; i < totsam ; ++i)
 		  			{
-						//iterate over individuals
+						//assign haplotype to vector of keepers if starts with 1
 		 				if( d[i][0] == '1' )
 						{	
-			    				/*for(unsigned j = 0 ; j < d.numsites() ; ++j) //JRI
-			      				{
-								//assign  each SNP j for individual i	
-//								d2[newdudes][j] = d[i][j];
-
-			      				}
-			    				newdudes++; */
-							indexes[nindexes++]=i;	
-//							cout << "now genos: " << d2[0][13] << " " << d2[1][13] << endl;
+							filtered_haps.push_back(d[i]);	
 						}
 		  			}
 	      			}
 	    		break;	
 	  	}
-//		cout << "2now genos: " << d2[0][13] << " " << d2[1][13] << endl;
-  	}
-  	//free(indexes);
 
-//	cout << d2[0][13] << endl << d2[1][13];
+		//declare new SimData filtered_data and fill with the haplotypes that you want to keep
+		SimData filtered_data;
+		filtered_data.assign( &*d.pbegin(),d.numsites(),&filtered_haps[0],filtered_haps.size() );
 
+		//Remove invariant sites
+		RemoveInvariantColumns(&filtered_data);
 
-//	Sequence::SimData::const_site_iterator itr = d.begin();
-	Sequence::PolyTable::data_iterator itr = d.begin(); itr+=3;
-//      	copy(d.begin(),itr,ostream_iterator<string>(cout,"\n"));
-	SimData d2;
-      	copy(d.begin(),itr,d2);
-
-
-	// print header of ms sim, with positions etc.
-	fprintf(stdout,"//\nsegsites: %d\npositions: ",nindexes+1);
-	for(unsigned j = 0 ; j < nindexes ; ++j) //JRI
-	{
-		fprintf(stdout,"%lf ",d.position(indexes[j])); //JRI
-	}
-	fprintf(stdout,"\n");
-	
-	//  RemoveInvariantColumns(&d2);
-  	for(unsigned i = 0 ; i < nindexes ; ++i)
-  	{		
-
-		for(unsigned j = 0 ; j < d.numsites() ; ++j) //
+		// print header of ms sim, with positions etc.
+		fprintf(stdout,"//\nsegsites: %d\npositions: ",filtered_data.numsites());
+		for(unsigned j = 0 ; j < filtered_data.numsites(); ++j) 
 		{
-			//cout << i << " " << j << endl;	
-//			cout << "here: " << i << " " << j << " " << d[indexes[i]][j] << endl;
-			fprintf(stdout,"%c",d[indexes[i]][j]); 
+			fprintf(stdout,"%lf ",filtered_data.position(j)); 
 		}
-	fprintf(stdout,"\n");
-
+		fprintf(stdout,"\n");
+	
+	  	for(unsigned i = 0 ; i < filtered_data.size() ; ++i)
+  		{		
+			cout << filtered_data[i] << endl;
+			// fprintf(stdout,"%c",filtered_data[i][j]); // too lazy to write for loop for C style
+  		}
   	}
+	filtered_haps.clear();
 }
 
 void parseargs(int argc, char *argv[],msffargs *args)

@@ -21,6 +21,9 @@ seedms
 #any output labelled "crap"
 *crap*
 
+#vim swap files
+*.swp
+
 # Compiled Object files
 *.slo
 *.lo

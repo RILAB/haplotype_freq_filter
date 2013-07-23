@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
   	SimParams p;
   	cin >> p;
   	SimData d(p.totsam());
-  	unsigned nruns = p.runs();
  	unsigned totsam = p.totsam();
 	vector<string> filtered_haps; // we will use this vector to store new haplotypes
 	unsigned dercounts;
@@ -80,7 +79,6 @@ int main(int argc, char *argv[]) {
 	      			{
 					//identify which allele is minor 0 or 1; if tie assign 0 as major and 1 as minor
 					char major_allele = dercounts > totsam-dercounts ? '1' : '0';
-
 					//iterate over individuals (rows)	
 					for(unsigned i = 0 ; i < totsam ; ++i)
 		  			{
@@ -104,7 +102,7 @@ int main(int argc, char *argv[]) {
 						//assign haplotype to vector of keepers if starts with 1
 		 				if( d[i][0] == '1' )
 						{	
-							filtered_haps.push_back(d[i]);	
+							filtered_haps.push_back(d[i]);
 						}
 		  			}
 	      			}
@@ -119,20 +117,29 @@ int main(int argc, char *argv[]) {
 		RemoveInvariantColumns(&filtered_data);
 
 		// print header of ms sim, with positions etc.
-		fprintf(stdout,"//\nsegsites: %d\npositions: ",filtered_data.numsites());
-		for(unsigned j = 0 ; j < filtered_data.numsites(); ++j) 
+		if( filtered_data.numsites()>0 && filtered_data.size()>0 )
 		{
-			fprintf(stdout,"%lf ",filtered_data.position(j)); 
-		}
-		fprintf(stdout,"\n");
+			fprintf(stdout,"//\nsegsites: %d\n",filtered_data.numsites());
+			fprintf(stdout,"positions: ");
+			for(unsigned j = 0 ; j < filtered_data.numsites(); ++j) 
+			{
+				fprintf(stdout,"%lf ",filtered_data.position(j)); 
+			}
+			fprintf(stdout,"\n");
 	
-	  	for(unsigned i = 0 ; i < filtered_data.size() ; ++i)
-  		{		
-			cout << filtered_data[i] << endl;
-			// fprintf(stdout,"%c",filtered_data[i][j]); // too lazy to write for loop for C style
-  		}
+
+			for(unsigned i = 0 ; i < filtered_data.size() ; ++i)
+  			{		
+				for(unsigned j = 0 ; j < filtered_data.numsites(); ++j) 
+				{
+					fprintf(stdout,"%c",filtered_data[i][j]);
+				}
+			fprintf(stdout,"\n");
+  			}
+		}
+		else{ fprintf(stdout,"//\nsegsites: 0\n\n\n"); }
+		filtered_haps.clear();
   	}
-	filtered_haps.clear();
 }
 
 void parseargs(int argc, char *argv[],msffargs *args)

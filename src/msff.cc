@@ -187,7 +187,7 @@ void parseargs(int argc, char *argv[],msffargs *args)
 void usage(void)
 {
   cerr<<"usage:\n";
-  cerr<<"To filter based on minor allele frequency:\n";
+  cerr<<"To filter based on major allele frequency:\n";
   cerr<<"msff -m freq\n";
   cerr<<"To filter based on derived allele frequency,\n";
   cerr<<"use -d instead of -m"<<endl;

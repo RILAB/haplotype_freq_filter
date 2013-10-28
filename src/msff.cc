@@ -61,6 +61,8 @@ int main(int argc, char *argv[]) {
   	int rv;
   	while( (rv=d.fromfile(stdin)) != EOF)
 	{
+		if( args.report ){ fprintf(stderr,"Haplotypes kept:\n"); }
+
 		// counts derived alleles at first site ONLY
 		dercounts = 0;
 		for (unsigned j = 0 ; j < d.size() ; ++j)
@@ -155,24 +157,24 @@ void parseargs(int argc, char *argv[],msffargs *args)
   //assign some defaults
   args->filter=MINOR;
   args->freq = 999.0;
-  args->report = FALSE;	
+  args->report = false;	
   int c;
 
-  while ((c = getopt (argc, argv, "m:d:h")) != -1)
+  while ((c = getopt (argc, argv, "m:d:hr")) != -1)
     {
       switch (c)
 	{
+	case 'r':
+	  args->report=true;
+	  break;	
 	case 'm':
 	  args->filter=MINOR;
 	  args->freq = atof(optarg);
-	  break;
-	case 'r':
-	  args->report=TRUE;
-	  break;
+	  break;	
 	case 'd':
 	  args->filter = DERIVED;
 	  args->freq = atof(optarg);
-	  break;
+          break;
 	case 'h':
 	  usage();
 	  exit(0);
@@ -197,5 +199,7 @@ void usage(void)
   cerr<<"To filter based on major allele frequency:\n";
   cerr<<"msff -m freq\n";
   cerr<<"To filter based on derived allele frequency,\n";
-  cerr<<"use -d instead of -m"<<endl;
+  cerr<<"use -d instead of -m\n";
+  cerr<<"Use -r to print the numbers of the haplotypes not filtered to standard error." << endl;		
+
 }

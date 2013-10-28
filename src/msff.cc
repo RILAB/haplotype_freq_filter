@@ -39,6 +39,7 @@ struct msffargs
 {
   filtertype filter;
   double freq;
+  bool report;	
 };
 
 void parseargs(int argc, char *argv[],msffargs *args);
@@ -86,6 +87,7 @@ int main(int argc, char *argv[]) {
 		 				if( d[i][0] == major_allele )
 						{	
 							filtered_haps.push_back(d[i]);	
+							if( args.report ){ fprintf(stderr,"%u\n",i); }						
 						}
 		  			}
 	      			}
@@ -103,6 +105,7 @@ int main(int argc, char *argv[]) {
 		 				if( d[i][0] == '1' )
 						{	
 							filtered_haps.push_back(d[i]);
+							if( args.report ){ fprintf(stderr,"%u\n",i); }						
 						}
 		  			}
 	      			}
@@ -152,6 +155,7 @@ void parseargs(int argc, char *argv[],msffargs *args)
   //assign some defaults
   args->filter=MINOR;
   args->freq = 999.0;
+  args->report = FALSE;	
   int c;
 
   while ((c = getopt (argc, argv, "m:d:h")) != -1)
@@ -161,6 +165,9 @@ void parseargs(int argc, char *argv[],msffargs *args)
 	case 'm':
 	  args->filter=MINOR;
 	  args->freq = atof(optarg);
+	  break;
+	case 'r':
+	  args->report=TRUE;
 	  break;
 	case 'd':
 	  args->filter = DERIVED;
